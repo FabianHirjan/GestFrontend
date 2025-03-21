@@ -1,0 +1,606 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		280B7FEB2D8D7C70008826E2 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 280B7FEA2D8D7C70008826E2 /* GoogleMaps */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2878652F2D8C8F3D00DA3CDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 287865162D8C8F3B00DA3CDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2878651D2D8C8F3B00DA3CDB;
+			remoteInfo = GestFront;
+		};
+		287865392D8C8F3D00DA3CDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 287865162D8C8F3B00DA3CDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2878651D2D8C8F3B00DA3CDB;
+			remoteInfo = GestFront;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2878651E2D8C8F3B00DA3CDB /* GestFront.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GestFront.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2878652E2D8C8F3D00DA3CDB /* GestFrontTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GestFrontTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		287865382D8C8F3D00DA3CDB /* GestFrontUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GestFrontUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		280B7FED2D8D8077008826E2 /* Exceptions for "GestFront" folder in "GestFront" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2878651D2D8C8F3B00DA3CDB /* GestFront */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		287865202D8C8F3B00DA3CDB /* GestFront */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				280B7FED2D8D8077008826E2 /* Exceptions for "GestFront" folder in "GestFront" target */,
+			);
+			path = GestFront;
+			sourceTree = "<group>";
+		};
+		287865312D8C8F3D00DA3CDB /* GestFrontTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GestFrontTests;
+			sourceTree = "<group>";
+		};
+		2878653B2D8C8F3D00DA3CDB /* GestFrontUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GestFrontUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2878651B2D8C8F3B00DA3CDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				280B7FEB2D8D7C70008826E2 /* GoogleMaps in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2878652B2D8C8F3D00DA3CDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287865352D8C8F3D00DA3CDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		287865152D8C8F3B00DA3CDB = {
+			isa = PBXGroup;
+			children = (
+				287865202D8C8F3B00DA3CDB /* GestFront */,
+				287865312D8C8F3D00DA3CDB /* GestFrontTests */,
+				2878653B2D8C8F3D00DA3CDB /* GestFrontUITests */,
+				2878651F2D8C8F3B00DA3CDB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2878651F2D8C8F3B00DA3CDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2878651E2D8C8F3B00DA3CDB /* GestFront.app */,
+				2878652E2D8C8F3D00DA3CDB /* GestFrontTests.xctest */,
+				287865382D8C8F3D00DA3CDB /* GestFrontUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2878651D2D8C8F3B00DA3CDB /* GestFront */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 287865422D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFront" */;
+			buildPhases = (
+				2878651A2D8C8F3B00DA3CDB /* Sources */,
+				2878651B2D8C8F3B00DA3CDB /* Frameworks */,
+				2878651C2D8C8F3B00DA3CDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				287865202D8C8F3B00DA3CDB /* GestFront */,
+			);
+			name = GestFront;
+			packageProductDependencies = (
+				280B7FEA2D8D7C70008826E2 /* GoogleMaps */,
+			);
+			productName = GestFront;
+			productReference = 2878651E2D8C8F3B00DA3CDB /* GestFront.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2878652D2D8C8F3D00DA3CDB /* GestFrontTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 287865452D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFrontTests" */;
+			buildPhases = (
+				2878652A2D8C8F3D00DA3CDB /* Sources */,
+				2878652B2D8C8F3D00DA3CDB /* Frameworks */,
+				2878652C2D8C8F3D00DA3CDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				287865302D8C8F3D00DA3CDB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				287865312D8C8F3D00DA3CDB /* GestFrontTests */,
+			);
+			name = GestFrontTests;
+			packageProductDependencies = (
+			);
+			productName = GestFrontTests;
+			productReference = 2878652E2D8C8F3D00DA3CDB /* GestFrontTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		287865372D8C8F3D00DA3CDB /* GestFrontUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 287865482D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFrontUITests" */;
+			buildPhases = (
+				287865342D8C8F3D00DA3CDB /* Sources */,
+				287865352D8C8F3D00DA3CDB /* Frameworks */,
+				287865362D8C8F3D00DA3CDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2878653A2D8C8F3D00DA3CDB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2878653B2D8C8F3D00DA3CDB /* GestFrontUITests */,
+			);
+			name = GestFrontUITests;
+			packageProductDependencies = (
+			);
+			productName = GestFrontUITests;
+			productReference = 287865382D8C8F3D00DA3CDB /* GestFrontUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		287865162D8C8F3B00DA3CDB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					2878651D2D8C8F3B00DA3CDB = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					2878652D2D8C8F3D00DA3CDB = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 2878651D2D8C8F3B00DA3CDB;
+					};
+					287865372D8C8F3D00DA3CDB = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 2878651D2D8C8F3B00DA3CDB;
+					};
+				};
+			};
+			buildConfigurationList = 287865192D8C8F3B00DA3CDB /* Build configuration list for PBXProject "GestFront" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 287865152D8C8F3B00DA3CDB;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				280B7FE92D8D7C70008826E2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2878651F2D8C8F3B00DA3CDB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2878651D2D8C8F3B00DA3CDB /* GestFront */,
+				2878652D2D8C8F3D00DA3CDB /* GestFrontTests */,
+				287865372D8C8F3D00DA3CDB /* GestFrontUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2878651C2D8C8F3B00DA3CDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2878652C2D8C8F3D00DA3CDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287865362D8C8F3D00DA3CDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2878651A2D8C8F3B00DA3CDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2878652A2D8C8F3D00DA3CDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287865342D8C8F3D00DA3CDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		287865302D8C8F3D00DA3CDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2878651D2D8C8F3B00DA3CDB /* GestFront */;
+			targetProxy = 2878652F2D8C8F3D00DA3CDB /* PBXContainerItemProxy */;
+		};
+		2878653A2D8C8F3D00DA3CDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2878651D2D8C8F3B00DA3CDB /* GestFront */;
+			targetProxy = 287865392D8C8F3D00DA3CDB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		287865402D8C8F3D00DA3CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		287865412D8C8F3D00DA3CDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		287865432D8C8F3D00DA3CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GestFront/Preview Content\"";
+				DEVELOPMENT_TEAM = 4BLY8K8PTW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GestFront/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFront;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		287865442D8C8F3D00DA3CDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GestFront/Preview Content\"";
+				DEVELOPMENT_TEAM = 4BLY8K8PTW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GestFront/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFront;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		287865462D8C8F3D00DA3CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFrontTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GestFront.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GestFront";
+			};
+			name = Debug;
+		};
+		287865472D8C8F3D00DA3CDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFrontTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GestFront.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GestFront";
+			};
+			name = Release;
+		};
+		287865492D8C8F3D00DA3CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFrontUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GestFront;
+			};
+			name = Debug;
+		};
+		2878654A2D8C8F3D00DA3CDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hirjanfabian.GestFrontUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GestFront;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		287865192D8C8F3B00DA3CDB /* Build configuration list for PBXProject "GestFront" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				287865402D8C8F3D00DA3CDB /* Debug */,
+				287865412D8C8F3D00DA3CDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		287865422D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFront" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				287865432D8C8F3D00DA3CDB /* Debug */,
+				287865442D8C8F3D00DA3CDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		287865452D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFrontTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				287865462D8C8F3D00DA3CDB /* Debug */,
+				287865472D8C8F3D00DA3CDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		287865482D8C8F3D00DA3CDB /* Build configuration list for PBXNativeTarget "GestFrontUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				287865492D8C8F3D00DA3CDB /* Debug */,
+				2878654A2D8C8F3D00DA3CDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		280B7FE92D8D7C70008826E2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		280B7FEA2D8D7C70008826E2 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 280B7FE92D8D7C70008826E2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 287865162D8C8F3B00DA3CDB /* Project object */;
+}

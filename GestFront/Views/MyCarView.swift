@@ -123,7 +123,6 @@ struct MyCarView: View {
             viewModel.fetchCar()
             dailyActivitiesVM.fetchActivities()
         }
-        // Observă schimbarea didEndDuty
         .onChange(of: trackingVM.didEndDuty) { newValue in
             if newValue {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {

@@ -2,62 +2,40 @@
 //  MyCarViewModel.swift
 //  GestFront
 //
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
 
 import Foundation
 
 class MyCarViewModel: ObservableObject {
     @Published var car: CarDTO?
-    @Published var isLoading: Bool = false
+    @Published var isLoading = false
     @Published var errorMessage: String?
-
+    
     func fetchCar() {
         isLoading = true
         errorMessage = nil
         
         UserCarService.shared.fetchUserCar { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                guard let self = self else { return }
+                self.isLoading = false
                 switch result {
-                case .success(let carDTO):
-                    self?.car = carDTO
+                case .success(let car):
+                    self.car = car
                 case .failure(let error):
-                    self?.errorMessage = "Failed to load car: \(error.localizedDescription)"
+                    self.errorMessage = "Failed to load car: \(error.localizedDescription)"
                 }
             }
         }
     }
-
-    func formattedDate(_ dateString: String?) -> String {
-        guard let dateString = dateString else { return "N/A" }
-        let formatterIn = DateFormatter()
-        formatterIn.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
-        
-        if let date = formatterIn.date(from: dateString) {
-            let formatterOut = DateFormatter()
-            formatterOut.dateFormat = "yyyy-MM-dd"
-            return formatterOut.string(from: date)
-        } else {
-            return "N/A"
-        }
-    }
-}
-
-extension MyCarViewModel {
-    var isInsuranceExpired: Bool {
-        guard let dateString = car?.insuranceExpiration else { return false }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
-        guard let date = formatter.date(from: dateString) else { return false }
-        return date < Date()
-    }
     
-    var isInspectionExpired: Bool {
-        guard let dateString = car?.lastInspection else { return false }
+    func formattedDate(_ date: String?) -> String {
+        guard let dateStr = date else { return "N/A" }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
-        guard let date = formatter.date(from: dateString) else { return false }
-        return Calendar.current.date(byAdding: .year, value: 1, to: date)! < Date()
+        if let date = formatter.date(from: dateStr) {
+            formatter.dateStyle = .medium
+            return formatter.string(from: date)
+        }
+        return dateStr
     }
 }

@@ -10,13 +10,10 @@
 
 import Foundation
 
-struct DailyActivityDTO: Codable {
+struct DailyActivityDTO: Codable, Identifiable {
     let id: Int
     let description: String
-    let kilometers: Int
-    let fuelConsumption: Double
-    let approved: Bool
+    let kilometers: Double
     let date: String
-    // Dacă endpoint-ul îți trimite data ca string (ex. "2025-03-10"),
-    // e suficient să o stochezi tot ca string sau să faci un parsing ulterior.
+    let fuelConsumption: Double?
 }

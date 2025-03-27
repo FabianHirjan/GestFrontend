@@ -2,70 +2,62 @@
 //  AllCarsView.swift
 //  GestFront
 //
-//  Created by Fabian Andrei Hirjan on 27.03.2025.
-//
 
 import SwiftUI
 
 struct AllCarsView: View {
     @StateObject private var viewModel = AllCarsViewModel()
     @State private var showingAssignSheet = false
-    @State private var selectedCarId: Int?
+    @State private var selectedCarId: Int64?
     
     var body: some View {
         NavigationView {
-            content
-                .navigationTitle("All Cars")
-                .onAppear {
-                    viewModel.fetchCars()
-                }
-                .sheet(isPresented: $showingAssignSheet) {
-                    AssignDriverView(carId: selectedCarId ?? 0, viewModel: viewModel)
-                }
-        }
-    }
-    
-    private var content: some View {
-        VStack {
-            if viewModel.isLoading {
-                ProgressView("Loading cars...")
-            } else if let error = viewModel.errorMessage {
-                Text(error)
-                    .foregroundColor(.red)
-            } else {
-                List(viewModel.cars) { car in
-                    carRow(for: car)
+            VStack {
+                if viewModel.isLoading {
+                    ProgressView("Loading cars...")
+                } else if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                } else {
+                    List(viewModel.cars) { car in
+                        HStack {
+                            Text("🚗")
+                                .font(.title)
+                            VStack(alignment: .leading) {
+                                Text("\(car.carMake.make) \(car.carModel.model)")
+                                    .font(.headline)
+                                Text("Plate: \(car.licensePlate)")
+                                    .font(.subheadline)
+                                Text("Driver: \(car.driver?.username ?? "Unassigned")")
+                                    .font(.subheadline)
+                                    .foregroundColor(car.driver == nil ? .gray : .black)
+                            }
+                            Spacer()
+                            if car.driver == nil {
+                                Button("Assign") {
+                                    selectedCarId = car.id
+                                    showingAssignSheet = true
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(.blue)
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
-    
-    private func carRow(for car: CarDTO) -> some View {
-        HStack {
-            Text("🚗")
-                .font(.title)
-            VStack(alignment: .leading) {
-                Text("\(car.carMake.make ?? "Unknown") \(car.carModel.model ?? "Unknown")")
-                    .font(.headline)
-                Text("Plate: \(car.licensePlate)")
-                    .font(.subheadline)
-                Text("Driver: Unassigned") // Placeholder until driver info is added    
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+            .navigationTitle("All Cars")
+            .onAppear {
+                viewModel.fetchCars()
             }
-            Spacer()
-            Button("Assign") {
-                selectedCarId = Int(car.id)
-                showingAssignSheet = true
+            .sheet(isPresented: $showingAssignSheet) {
+                AssignDriverView(carId: selectedCarId ?? 0, viewModel: viewModel)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.blue)
         }
     }
 }
 
 struct AssignDriverView: View {
-    let carId: Int
+    let carId: Int64
     @ObservedObject var viewModel: AllCarsViewModel
     @State private var userId: String = ""
     @Environment(\.dismiss) var dismiss
@@ -82,7 +74,7 @@ struct AssignDriverView: View {
                 .padding()
             
             Button("Assign") {
-                if let id = Int(userId) {
+                if let id = Int64(userId) {
                     viewModel.assignCar(carId: carId, userId: id)
                     dismiss()
                 }

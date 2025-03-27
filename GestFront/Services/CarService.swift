@@ -34,8 +34,8 @@ class CarService {
         }.resume()
     }
     
-    func assignCar(carId: Int, userId: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(Config.baseURL)/api/cars/\(carId)/assign") else {
+    func assignCar(carId: Int64, userId: Int64, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "\(Config.baseURL)/cars/\(carId)/assign") else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
             return
         }
@@ -61,3 +61,4 @@ class CarService {
         }.resume()
     }
 }
+

@@ -2,13 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Privacy - Notifications Usage Description</key>
+    <!-- Permisiuni pentru locație -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to track your car duty status while the app is in use.</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to track your car duty status even when the app is in the background or closed.</string>
+    
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need your location to track your car duty status even when the app is in the background or closed (for older iOS versions).</string>
+    
+    <!-- Moduri de fundal -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+    </array>
+    
+    <!-- Permisiuni pentru notificări (dacă folosești notificări) -->
+    <key>NSUserNotificationUsageDescription</key>
     <string>This app sends notifications about your car status.</string>
-
-    <key>Privacy - Location When In Use Usage Description</key>
-    <string>This app requires your location to track your car duty status.</string>
-
-    <key>Privacy - Location Always and When In Use Usage Description</key>
-    <string>This app requires always-on location access for tracking even when the app is closed or not in use.</string>
 </dict>
 </plist>

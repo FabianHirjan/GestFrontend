@@ -1,4 +1,7 @@
-// Views/DailyActivitiesView.swift
+//
+//  DailyActivitiesView.swift
+//  GestFront
+//
 
 import SwiftUI
 
@@ -6,29 +9,36 @@ struct DailyActivitiesView: View {
     @StateObject private var viewModel = DailyActivitiesViewModel()
     
     var body: some View {
-        List {
-            if viewModel.isLoading {
-                Text("Loading...")
-            } else if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage).foregroundColor(.red)
-            } else {
-                ForEach(viewModel.activities, id: \.id) { activity in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Description: \(activity.description)")
-                            .font(.headline)
-                        Text("Kilometers: \(activity.kilometers)")
-                        Text("Fuel: \(activity.fuelConsumption)")
-                        Text("Date: \(activity.date)")
-                        Text("Approved: \(activity.approved ? "Yes" : "No")")
-                            .foregroundColor(activity.approved ? .green : .red)
+        NavigationView {
+            VStack {
+                if viewModel.isLoading {
+                    ProgressView("Loading activities...")
+                } else if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                } else {
+                    List(viewModel.activities) { activity in
+                        VStack(alignment: .leading) {
+                            Text(activity.description)
+                                .font(.headline)
+                            Text("Distance: \(String(format: "%.2f", activity.kilometers)) km")
+                            Text("Date: \(activity.date)")
+                            if let fuel = activity.fuelConsumption {
+                                Text("Fuel: \(String(format: "%.1f", fuel)) L/100km")
+                            }
+                        }
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 4)
                 }
             }
-        }
-        .navigationTitle("Daily Activities")
-        .onAppear {
-            viewModel.fetchActivities()
+            .navigationTitle("Daily Activities")
+            .onAppear {
+                viewModel.fetchActivities()
+            }
         }
     }
+}
+
+#Preview {
+    DailyActivitiesView()
 }

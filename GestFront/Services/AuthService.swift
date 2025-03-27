@@ -1,83 +1,53 @@
-//
-//  AuthService.swift
-//  GestFront
-//
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
-
 // Services/AuthService.swift
-
 import Foundation
 
 class AuthService {
     static let shared = AuthService()
+    private let networkManager = NetworkManager.shared
     
-    private init() { }
+    private init() {}
     
     func login(username: String, password: String, completion: @escaping (Result<(token: String, role: String), Error>) -> Void) {
-        // 1. Creezi URL-ul către endpoint-ul tău, ex: http://localhost:8080/api/auth/login
-        guard let url = URL(string: "\(Config.baseURL)/auth/login") else {
-            // Sau URL-ul real de producție
-            print("URL invalid")
-            return
-        }
+        guard let url = URL(string: "\(Config.baseURL)/auth/login") else { return }
+        let body = ["username": username, "password": password]
+        let request = networkManager.createRequest(url: url, method: "POST", body: body)
         
-        // 2. Creezi request-ul
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // 3. Struct pentru Body
-        let body: [String: Any] = [
-            "username": username,
-            "password": password
-        ]
-        
-        // 4. Transformi body-ul în JSON
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: body, options: [])
-            request.httpBody = jsonData
-        } catch {
-            print("Eroare la serializarea JSON: \(error)")
-            completion(.failure(error))
-            return
-        }
-        
-        // 5. Faci apelul
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // Verifici erorile de rețea
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Verifici dacă ai date + status code valid
-            if let data = data,
-               let httpResponse = response as? HTTPURLResponse {
-                
-                guard (200...299).contains(httpResponse.statusCode) else {
-                    // În caz de 401, 403, etc.
-                    let statusError = NSError(domain: "", code: httpResponse.statusCode, userInfo: nil)
-                    completion(.failure(statusError))
+        networkManager.performRequest(request) { (result: Result<[String: String], Error>) in
+            switch result {
+            case .success(let json):
+                guard let token = json["token"], let role = json["role"] else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
                     return
                 }
-                
-                // Parsezi JSON-ul (așteptăm un obiect de forma: { "token": "...", "role": "..." } )
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                       let token = json["token"] as? String,
-                       let role = json["role"] as? String {
-                        // Returnezi token + role prin callback
-                        completion(.success((token, role)))
-                    } else {
-                        let parsingError = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Parsing error"])
-                        completion(.failure(parsingError))
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
+                UserDefaults.standard.set(token, forKey: "jwt_token")
+                UserDefaults.standard.set(role, forKey: "user_role")
+                completion(.success((token, role)))
+            case .failure(let error):
+                completion(.failure(error))
             }
-        }.resume()
+        }
+    }
+    
+    func validateToken(completion: @escaping (Bool) -> Void) {
+        guard let token = UserDefaults.standard.string(forKey: "jwt_token"),
+              let url = URL(string: "\(Config.baseURL)/auth/validate") else {
+            completion(false)
+            return
+        }
+        let request = networkManager.createRequest(url: url, method: "GET", token: token)
+        networkManager.performRequest(request) { (result: Result<String, Error>) in
+            switch result {  // Corectăm verificarea
+            case .success:
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+    }
+    
+    func logout() {
+        UserDefaults.standard.removeObject(forKey: "jwt_token")
+        UserDefaults.standard.removeObject(forKey: "user_role")
+        UserDefaults.standard.set(false, forKey: "isDutyActive")
     }
 }

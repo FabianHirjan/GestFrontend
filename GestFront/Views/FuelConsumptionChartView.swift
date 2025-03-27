@@ -2,39 +2,36 @@
 //  FuelConsumptionChartView.swift
 //  GestFront
 //
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
 
 import SwiftUI
-import Charts
 
 struct FuelConsumptionChartView: View {
     let data: [(date: String, consumption: Double)]
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Fuel Consumption")
                 .font(.headline)
-                .padding(.bottom, 8)
-
-            Chart(data, id: \.date) { point in
-                LineMark(
-                    x: .value("Date", point.date),
-                    y: .value("Fuel Consumption", point.consumption)
-                )
-                .interpolationMethod(.catmullRom)
-                .symbol(Circle())
+            ScrollView {
+                ForEach(data, id: \.date) { item in
+                    HStack {
+                        Text(item.date)
+                            .font(.subheadline)
+                        Spacer()
+                        Text(String(format: "%.1f L/100km", item.consumption))
+                            .font(.subheadline)
+                    }
+                    .padding(.vertical, 4)
+                }
             }
-            .chartXAxis {
-                AxisMarks(values: .automatic(desiredCount: 6))
-            }
-            .chartYAxis {
-                AxisMarks(position: .leading)
-            }
+            .frame(maxHeight: 200)
         }
         .padding()
-        .background(Color(UIColor.systemGray6))
-        .cornerRadius(12)
+        .background(Color(.systemGray6))
+        .cornerRadius(8)
     }
+}
+
+#Preview {
+    FuelConsumptionChartView(data: [("2025-03-01", 5.5), ("2025-03-02", 6.2)])
 }

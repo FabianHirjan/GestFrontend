@@ -1,16 +1,4 @@
-//
-//  AdminTrackingView.swift
-//  GestFront
-//
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
-
-//
-//  AdminTrackingView.swift
-//  GestFront
-//
-
+// Views/AdminTrackingView.swift
 import SwiftUI
 import GoogleMaps
 
@@ -40,7 +28,7 @@ struct AdminTrackingView: View {
         }
         .navigationTitle("Admin Dashboard")
         .onAppear {
-            trackingService.connect() // Reconnect if needed
+            trackingService.connect()
         }
         .onDisappear {
             trackingService.disconnect()
@@ -49,10 +37,10 @@ struct AdminTrackingView: View {
 }
 
 struct GoogleMapsAdminView: UIViewRepresentable {
-    @Binding var userLocations: [UserLocation]
+    @Binding var userLocations: [UserLocation]  // Tipul este acum vizibil
     
     func makeUIView(context: Context) -> GMSMapView {
-        let camera = GMSCameraPosition.camera(withLatitude: 47.158, longitude: 27.619, zoom: 15) // Default to your test area
+        let camera = GMSCameraPosition.camera(withLatitude: 47.158, longitude: 27.619, zoom: 15)
         let mapView = GMSMapView(frame: .zero, camera: camera)
         return mapView
     }

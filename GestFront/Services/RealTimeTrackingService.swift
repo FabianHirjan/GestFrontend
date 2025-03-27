@@ -1,17 +1,15 @@
-//
-//  RealTimeTrackingService.swift
-//  GestFront
-//
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
-
-//
-//  RealTimeTrackingService.swift
-//  GestFront
-//
-
+// Services/RealTimeTrackingService.swift
 import Foundation
+
+// Definim UserLocation în același fișier (sau mută în Models/UserLocation.swift)
+struct UserLocation: Identifiable, Codable {
+    let id = UUID()
+    let userId: Int
+    let username: String
+    let latitude: Double
+    let longitude: Double
+    let timestamp: String
+}
 
 class RealTimeTrackingService: ObservableObject {
     static let shared = RealTimeTrackingService()
@@ -20,15 +18,13 @@ class RealTimeTrackingService: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask?
     private let jwtToken: String
     
-    init() {
-        // Retrieve the admin JWT token from UserDefaults (set during login)
+    private init() {
         self.jwtToken = UserDefaults.standard.string(forKey: "jwt_token") ?? ""
         connect()
     }
     
     func connect() {
-        guard let url = URL(string: "wss://gest-app-bachelors-production-7d2e.up.railway.app/ws/user-tracking") else { return }
-        
+        guard let url = URL(string: "\(Config.wsURL)/user-tracking") else { return }
         var request = URLRequest(url: url)
         request.addValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
         
@@ -47,7 +43,6 @@ class RealTimeTrackingService: ObservableObject {
                     if let data = text.data(using: .utf8),
                        let location = try? JSONDecoder().decode(UserLocation.self, from: data) {
                         DispatchQueue.main.async {
-                            // Remove duplicates based on userId and keep the latest
                             if let index = self?.userLocations.firstIndex(where: { $0.userId == location.userId }) {
                                 self?.userLocations[index] = location
                             } else {
@@ -58,7 +53,7 @@ class RealTimeTrackingService: ObservableObject {
                 default:
                     break
                 }
-                self?.receiveMessages() // Continue listening
+                self?.receiveMessages()
             case .failure(let error):
                 print("WebSocket error: \(error.localizedDescription)")
             }
@@ -69,13 +64,4 @@ class RealTimeTrackingService: ObservableObject {
         webSocketTask?.cancel(with: .goingAway, reason: nil)
         userLocations.removeAll()
     }
-}
-
-struct UserLocation: Identifiable, Codable {
-    let id = UUID() // Unique ID for SwiftUI
-    let userId: Int
-    let username: String
-    let latitude: Double
-    let longitude: Double
-    let timestamp: String
 }

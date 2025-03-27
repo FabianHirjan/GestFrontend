@@ -1,53 +1,42 @@
-import SwiftUI
+//
+//  CreateDailyActivityViewModel.swift
+//  GestFront
+//
+
+import Foundation
 
 class CreateDailyActivityViewModel: ObservableObject {
-    @Published var descriptionText: String
-    @Published var kilometers: String
-    @Published var fuelConsumption: String = "" // Empty by default, user will input this
+    @Published var description: String
+    @Published var kilometers: Double
     @Published var date: Date
-    @Published var isLoading: Bool = false
+    @Published var isSubmitting = false
     @Published var errorMessage: String?
-    @Published var creationSuccess: Bool = false
-
-    init(description: String, kilometers: Int, date: Date) {
-        self.descriptionText = description
-        self.kilometers = "\(kilometers)"
+    @Published var submissionSuccess = false
+    
+    init(description: String, kilometers: Double, date: Date) {
+        self.description = description
+        self.kilometers = kilometers
         self.date = date
     }
-
-    func createActivity() {
-        isLoading = true
+    
+    func submitActivity() {
+        isSubmitting = true
         errorMessage = nil
         
-        guard let km = Int(kilometers) else {
-            self.errorMessage = "Kilometers must be an integer!"
-            self.isLoading = false
-            return
-        }
-        
-        guard let fuel = Double(fuelConsumption) else {
-            self.errorMessage = "Fuel consumption must be a valid number!"
-            self.isLoading = false
-            return
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let dateString = formatter.string(from: date)
-        
-        DailyActivityService.shared.createDailyActivity(
-            description: descriptionText,
-            kilometers: km,
-            fuelConsumption: fuel,
-            date: dateString
+        DailyActivityService.shared.createActivity(
+            description: description,
+            kilometers: kilometers,
+            date: date
         ) { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                guard let self = self else { return }
+                self.isSubmitting = false
                 switch result {
-                case .success(_):
-                    self?.creationSuccess = true
+                case .success(let id):
+                    print("Activity created with ID: \(id)")
+                    self.submissionSuccess = true
                 case .failure(let error):
-                    self?.errorMessage = "Error: \(error.localizedDescription)"
+                    self.errorMessage = "Failed to submit activity: \(error.localizedDescription)"
                 }
             }
         }

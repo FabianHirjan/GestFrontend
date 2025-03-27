@@ -2,9 +2,6 @@
 //  GoogleMapsView.swift
 //  GestFront
 //
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
 
 import SwiftUI
 import GoogleMaps
@@ -12,28 +9,33 @@ import GoogleMaps
 struct GoogleMapsView: UIViewRepresentable {
     @Binding var currentLocation: CLLocation?
     @Binding var path: GMSMutablePath
-
+    
     func makeUIView(context: Context) -> GMSMapView {
-        let camera = GMSCameraPosition.camera(withLatitude: currentLocation?.coordinate.latitude ?? 0,
-                                              longitude: currentLocation?.coordinate.longitude ?? 0,
-                                              zoom: 16)
+        let camera = GMSCameraPosition.camera(withLatitude: 47.158, longitude: 27.619, zoom: 15)
         let mapView = GMSMapView(frame: .zero, camera: camera)
         mapView.isMyLocationEnabled = true
-        mapView.settings.myLocationButton = true
         return mapView
     }
-
+    
     func updateUIView(_ mapView: GMSMapView, context: Context) {
-        if let loc = currentLocation {
-            let cameraUpdate = GMSCameraUpdate.setTarget(loc.coordinate, zoom: 16)
-            mapView.animate(with: cameraUpdate)
-
-            path.add(loc.coordinate)
-            mapView.clear()
+        mapView.clear()
+        
+        if let location = currentLocation {
+            let coordinate = location.coordinate
+            path.add(coordinate)
+            
+            let marker = GMSMarker()
+            marker.position = coordinate
+            marker.title = "Current Location"
+            marker.map = mapView
+            
             let polyline = GMSPolyline(path: path)
-            polyline.strokeWidth = 4
             polyline.strokeColor = .blue
+            polyline.strokeWidth = 5.0
             polyline.map = mapView
+            
+            let camera = GMSCameraPosition.camera(withLatitude: coordinate.latitude, longitude: coordinate.longitude, zoom: 15)
+            mapView.animate(to: camera)
         }
     }
 }

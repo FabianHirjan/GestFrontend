@@ -1,53 +1,56 @@
-//
-//  MenuView.swift
-//  GestFront
-//
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
-
 // Views/MenuView.swift
-
 import SwiftUI
 
 struct MenuView: View {
-    @StateObject private var viewModel = MenuViewModel()
+    @StateObject private var view_model = MenuViewModel()
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("Main Menu")
-                    .font(.largeTitle)
-                    .padding()
-                
-                NavigationLink(destination: MyCarView()) {
-                    Text("My Car")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
+            if view_model.is_logged_in {
+                VStack(spacing: 20) {
+                    Text("Main Menu")
+                        .font(.largeTitle)
                         .padding()
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
-                }
-                
-                // In MyCarView.swift, inside the VStack:
-                if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
-                    NavigationLink(destination: AllCarsView()) {
-                        Text("View All Cars")
+                    
+                    NavigationLink(destination: MyCarView()) {
+                        Text("My Car")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.purple)
-                            .foregroundColor(.white)
+                            .background(Color.gray.opacity(0.2))
                             .cornerRadius(8)
                     }
+                    
+                    if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
+                        NavigationLink(destination: AllCarsView()) {
+                            Text("View All Cars")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.purple)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    Button("Logout") {
+                        view_model.logout()
+                    }
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
                     .padding(.horizontal)
+                    
+                    Spacer()
                 }
-                // Mai adaugi și alte opțiuni de meniu:
-                // e.g. NavigationLink(destination: ....) { Text("Profil") }
-                
-                Spacer()
+                .padding()
+            } else {
+                LoginView()
             }
-            .padding()
         }
     }
 }

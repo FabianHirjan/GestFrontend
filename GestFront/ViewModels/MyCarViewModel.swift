@@ -5,9 +5,6 @@
 //  Created by Fabian Andrei Hirjan on 21.03.2025.
 //
 
-
-// ViewModels/MyCarViewModel.swift
-
 import Foundation
 
 class MyCarViewModel: ObservableObject {
@@ -32,7 +29,6 @@ class MyCarViewModel: ObservableObject {
         }
     }
 
-    // Formatare simplificată a datei
     func formattedDate(_ dateString: String?) -> String {
         guard let dateString = dateString else { return "N/A" }
         let formatterIn = DateFormatter()
@@ -49,8 +45,6 @@ class MyCarViewModel: ObservableObject {
 }
 
 extension MyCarViewModel {
-    
-    // Verifică expirarea asigurării
     var isInsuranceExpired: Bool {
         guard let dateString = car?.insuranceExpiration else { return false }
         let formatter = DateFormatter()
@@ -59,7 +53,6 @@ extension MyCarViewModel {
         return date < Date()
     }
     
-    // Verifică dacă ultima inspecție a fost acum mai mult de un an
     var isInspectionExpired: Bool {
         guard let dateString = car?.lastInspection else { return false }
         let formatter = DateFormatter()
@@ -68,5 +61,3 @@ extension MyCarViewModel {
         return Calendar.current.date(byAdding: .year, value: 1, to: date)! < Date()
     }
 }
-
-

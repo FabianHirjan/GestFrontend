@@ -1,29 +1,20 @@
-//
-//  CreateDailyActivityView.swift
-//  GestFront
-//
-//  Created by Fabian Andrei Hirjan on 21.03.2025.
-//
-
 import SwiftUI
 
 class CreateDailyActivityViewModel: ObservableObject {
-    @Published var descriptionText: String = ""
-    @Published var kilometers: String = ""
-    @Published var fuelConsumption: String = ""
-    @Published var date: Date = Date()
+    @Published var descriptionText: String
+    @Published var kilometers: String
+    @Published var fuelConsumption: String = "" // Empty by default, user will input this
+    @Published var date: Date
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var creationSuccess: Bool = false
 
-    // Adaugă constructorul nou aici
-    init(description: String, kilometers: Int, fuelConsumption: Double) {
+    init(description: String, kilometers: Int, date: Date) {
         self.descriptionText = description
         self.kilometers = "\(kilometers)"
-        self.fuelConsumption = "\(fuelConsumption)"
+        self.date = date
     }
 
-    
     func createActivity() {
         isLoading = true
         errorMessage = nil

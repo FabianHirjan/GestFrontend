@@ -1,3 +1,8 @@
+//
+//  DutyTrackingViewModel.swift
+//  GestFront
+//
+
 import SwiftUI
 import CoreLocation
 
@@ -10,7 +15,8 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var averageSpeed: Double = 0
     @Published var routeDescription = ""
     @Published var didEndDuty: Bool = false
-    @Published var calculatedDutyDetails: (description: String, kilometers: Int, fuelConsumption: Double)?
+    @Published var calculatedDutyDetails: (description: String, kilometers: Int, date: Date)?
+    @Published var lastLocationName: String? // Added for last location display
 
     private var locationManager = CLLocationManager()
     private var speedSamples: [Double] = []
@@ -18,11 +24,11 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     private let geocoder = CLGeocoder()
     private var readableLocations: [String] = []
     
-    // Properties for stop detection
     private var lastStoppedLocation: CLLocation?
     private var stoppedTimestamp: Date?
     private let stopThreshold: TimeInterval = 300 // 5 minutes in seconds
-    private var startLocation: CLLocation? // Track the start location
+    private var startLocation: CLLocation?
+    private var lastLiveUpdate: Date? // Throttle live updates
 
     private override init() {
         super.init()
@@ -41,7 +47,8 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         calculatedDutyDetails = nil
         lastStoppedLocation = nil
         stoppedTimestamp = nil
-        startLocation = nil // Reset start location
+        startLocation = nil
+        lastLiveUpdate = nil
         locationManager.startUpdatingLocation()
         startTimerForAverageSpeed()
     }
@@ -52,7 +59,6 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         locationManager.stopUpdatingLocation()
         timer?.invalidate()
 
-        // Add the final stop location
         if let lastLocation = locationsVisited.last {
             reverseGeocodeLocation(lastLocation) { readableName in
                 if let readableName = readableName, !self.readableLocations.contains(readableName) {
@@ -71,6 +77,25 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
 
         sendDutyDataToBackend()
     }
+    
+    func fetchLastLocation() {
+        UserService.shared.fetchLastLocation { [weak self] result in
+            switch result {
+            case .success(let (latitude, longitude)):
+                let location = CLLocation(latitude: latitude, longitude: longitude)
+                self?.reverseGeocodeLocation(location) { readableName in
+                    DispatchQueue.main.async {
+                        self?.lastLocationName = readableName ?? "Unknown"
+                    }
+                }
+            case .failure(let error):
+                print("Error fetching last location: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self?.lastLocationName = "Unknown"
+                }
+            }
+        }
+    }
 
     private func startTimerForAverageSpeed() {
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
@@ -87,10 +112,9 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
             self.locationsVisited.append(loc)
 
             if loc.speed >= 0 {
-                self.speedSamples.append(loc.speed * 3.6) // Convert m/s to km/h
+                self.speedSamples.append(loc.speed * 3.6)
             }
 
-            // Set the start location if it's the first update
             if self.startLocation == nil {
                 self.startLocation = loc
                 self.reverseGeocodeLocation(loc) { readableName in
@@ -101,39 +125,36 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
                 }
             }
 
-            // Handle intermediate stops
             self.handleLocationUpdate(loc)
 
-            DutyTrackingService.shared.sendLiveLocation(
-                location: loc,
-                averageSpeed: self.averageSpeed
-            )
+            // Throttle live location updates to every 5 seconds
+            if self.lastLiveUpdate == nil || Date().timeIntervalSince(self.lastLiveUpdate!) >= 5 {
+                DutyTrackingService.shared.sendLiveLocation(
+                    location: loc,
+                    averageSpeed: self.averageSpeed
+                )
+                self.lastLiveUpdate = Date()
+            }
         }
     }
 
-    // Handle location updates to detect stops
     private func handleLocationUpdate(_ location: CLLocation) {
-        let isStopped = location.speed < 1.0 // Consider stopped if speed < 1 km/h
-
+        let isStopped = location.speed < 1.0
         if isStopped {
-            if lastStoppedLocation == nil || location.distance(from: lastStoppedLocation!) > 50 { // New stop location
+            if lastStoppedLocation == nil || location.distance(from: lastStoppedLocation!) > 50 {
                 lastStoppedLocation = location
                 stoppedTimestamp = Date()
             } else {
-                // Same stop location, check if 5 minutes have passed
                 checkAndAddStoppedLocation()
             }
         } else {
-            // Car is moving, reset stop tracking
             lastStoppedLocation = nil
             stoppedTimestamp = nil
         }
     }
 
-    // Check if the car has been stopped for 5+ minutes and add the location
     private func checkAndAddStoppedLocation() {
         guard let stoppedLocation = lastStoppedLocation, let timestamp = stoppedTimestamp else { return }
-
         let timeElapsed = Date().timeIntervalSince(timestamp)
         if timeElapsed >= stopThreshold {
             reverseGeocodeLocation(stoppedLocation) { readableName in
@@ -142,20 +163,17 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
                     self.updateRouteDescription()
                 }
             }
-            // Reset after adding to avoid duplicates
             lastStoppedLocation = nil
             stoppedTimestamp = nil
         }
     }
 
-    // Reverse geocode a CLLocation to get a human-readable name
     private func reverseGeocodeLocation(_ location: CLLocation, completion: @escaping (String?) -> Void) {
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             guard let placemark = placemarks?.first, error == nil else {
                 completion(nil)
                 return
             }
-
             let city = placemark.locality ?? placemark.administrativeArea ?? "Unknown City"
             let street = placemark.thoroughfare ?? ""
             let readableName = street.isEmpty ? city : "\(city), \(street)"
@@ -163,25 +181,22 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
-    // Update the route description with readable locations
     private func updateRouteDescription() {
         routeDescription = readableLocations.joined(separator: " -> ")
     }
 
-    func calculateDutyDetails() -> (description: String, kilometers: Int, fuelConsumption: Double) {
+    func calculateDutyDetails() -> (description: String, kilometers: Int, date: Date) {
         updateRouteDescription()
 
         let distance = locationsVisited.reduce(0.0) { result, location in
             guard let last = locationsVisited.first(where: { $0 !== location }) else { return result }
             return result + location.distance(from: last)
-        } / 1000.0 // Convert meters to kilometers
-
-        let consumptionEstimate = distance / 15.0
+        } / 1000.0
 
         return (
             description: routeDescription,
             kilometers: Int(distance.rounded()),
-            fuelConsumption: Double(consumptionEstimate.rounded(toPlaces: 2))
+            date: Date()
         )
     }
 

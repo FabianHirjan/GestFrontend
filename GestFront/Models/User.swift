@@ -16,8 +16,4 @@ struct User: Codable {
     let email: String
     let firstName: String?
     let lastName: String?
-    // ... orice altceva mai ai nevoie
-    
-    // Poți adăuga un initializer, dar dacă toate sunt opționale
-    // sau mapezi direct prin JSON, e suficient să fie decodabil (Codable).
 }

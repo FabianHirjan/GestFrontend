@@ -28,6 +28,20 @@ struct MenuView: View {
                         .background(Color.gray.opacity(0.2))
                         .cornerRadius(8)
                 }
+                
+                // In MyCarView.swift, inside the VStack:
+                if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
+                    NavigationLink(destination: AllCarsView()) {
+                        Text("View All Cars")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.purple)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.horizontal)
+                }
                 // Mai adaugi și alte opțiuni de meniu:
                 // e.g. NavigationLink(destination: ....) { Text("Profil") }
                 

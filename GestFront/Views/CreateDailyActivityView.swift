@@ -1,6 +1,5 @@
-// Views/CreateDailyActivityView.swift
-
 import SwiftUI
+
 struct CreateDailyActivityView: View {
     @StateObject var viewModel: CreateDailyActivityViewModel
     @Environment(\.dismiss) var dismiss
@@ -8,12 +7,24 @@ struct CreateDailyActivityView: View {
     var body: some View {
         Form {
             Section(header: Text("Activity Info")) {
-                TextField("Description", text: $viewModel.descriptionText)
-                TextField("Kilometers", text: $viewModel.kilometers)
-                    .keyboardType(.numberPad)
-                TextField("Fuel Consumption", text: $viewModel.fuelConsumption)
+                // Description (non-editable)
+                Text(viewModel.descriptionText)
+                    .foregroundColor(.gray)
+                    .padding(.vertical, 8)
+
+                // Kilometers (non-editable)
+                Text("\(viewModel.kilometers) km")
+                    .foregroundColor(.gray)
+                    .padding(.vertical, 8)
+
+                // Fuel Consumption (editable)
+                TextField("Fuel Consumption (liters)", text: $viewModel.fuelConsumption)
                     .keyboardType(.decimalPad)
-                DatePicker("Date", selection: $viewModel.date, displayedComponents: .date)
+
+                // Date (non-editable)
+                Text(viewModel.date, style: .date)
+                    .foregroundColor(.gray)
+                    .padding(.vertical, 8)
             }
             
             if let errorMessage = viewModel.errorMessage {

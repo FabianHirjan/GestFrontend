@@ -21,7 +21,6 @@ struct MyCarView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                // Icon
                 Image(systemName: "car.fill")
                     .resizable()
                     .scaledToFit()
@@ -30,29 +29,26 @@ struct MyCarView: View {
                     .padding(.top, 20)
 
                 if let car = viewModel.car {
-                    // Titlu cu make & model
                     Text("\(car.carMake.make ?? "") \(car.carModel.model ?? "")")
                         .font(.title)
                         .fontWeight(.bold)
 
-                    // Info card 1
+                    MyCarInfoCard(title: "Last Location", value: trackingVM.lastLocationName ?? "Fetching...")
+
                     HStack(spacing: 16) {
                         MyCarInfoCard(title: "Plate", value: car.licensePlate)
                         MyCarInfoCard(title: "Mileage", value: "\(car.mileage) km")
                     }
 
-                    // Info card 2
                     HStack(spacing: 16) {
                         MyCarInfoCard(title: "VIN", value: car.vin)
                         MyCarInfoCard(title: "Inspection", value: viewModel.formattedDate(car.lastInspection))
                     }
 
-                    // Info card 3
                     HStack(spacing: 16) {
                         MyCarInfoCard(title: "Insurance Valid", value: viewModel.formattedDate(car.insuranceExpiration))
                     }
 
-                    // Grafic consum combustibil
                     if dailyActivitiesVM.isLoading {
                         ProgressView("Loading fuel consumption data...")
                             .padding()
@@ -65,12 +61,10 @@ struct MyCarView: View {
                             .padding()
                     }
 
-                    // Hartă Google Maps
                     GoogleMapsView(currentLocation: $trackingVM.currentLocation, path: $path)
                         .frame(height: 300)
                         .cornerRadius(12)
 
-                    // Butoane Start / Stop duty + viteză medie
                     if trackingVM.isDutyActive {
                         Button("Stop Duty") {
                             print("[DEBUG] Stop Duty button pressed!")
@@ -81,7 +75,6 @@ struct MyCarView: View {
 
                         Text("Avg Speed: \(String(format: "%.1f", trackingVM.averageSpeed)) km/h")
                             .padding()
-
                     } else {
                         Button("Start Duty") {
                             trackingVM.startDuty()
@@ -90,7 +83,6 @@ struct MyCarView: View {
                         .tint(.green)
                     }
 
-                    // Buton de navigare la Daily Activities
                     NavigationLink(destination: DailyActivitiesView()) {
                         Text("View Daily Activities")
                             .fontWeight(.semibold)
@@ -102,8 +94,20 @@ struct MyCarView: View {
                     }
                     .padding(.horizontal)
 
+                    // Admin-only tracking link
+                    if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
+                        NavigationLink(destination: AdminTrackingView()) {
+                            Text("Real-Time User Tracking")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                    }
                 } else {
-                    // Dacă nu avem date despre mașină
                     if viewModel.isLoading {
                         ProgressView("Loading Car...")
                     } else if let error = viewModel.errorMessage {
@@ -122,6 +126,7 @@ struct MyCarView: View {
         .onAppear {
             viewModel.fetchCar()
             dailyActivitiesVM.fetchActivities()
+            trackingVM.fetchLastLocation()
         }
         .onChange(of: trackingVM.didEndDuty) { newValue in
             if newValue {
@@ -137,19 +142,15 @@ struct MyCarView: View {
                 CreateDailyActivityView(viewModel: CreateDailyActivityViewModel(
                     description: details.description,
                     kilometers: details.kilometers,
-                    fuelConsumption: details.fuelConsumption
+                    date: details.date
                 ))
             } else {
                 ProgressView("Loading details...")
             }
         }
-
-
-
     }
 }
 
-// Card simplu pentru MyCar
 struct MyCarInfoCard: View {
     let title: String
     let value: String

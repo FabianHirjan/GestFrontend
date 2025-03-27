@@ -13,6 +13,46 @@ struct MyCarView: View {
     @State private var path = GMSMutablePath()
     @State private var shouldPresentSheet = false
     
+    // Formatter pentru conversia stringurilor în Date
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
+        return formatter
+    }
+    
+    // Alerta pentru inspectie: peste 1 an de la ultima inspecție
+    private var isInspectionOverdue: Bool {
+        guard let car = viewModel.car,
+              let inspectionDate = dateFormatter.date(from: car.lastInspection) else { return false }
+        return Date().timeIntervalSince(inspectionDate) > (365 * 24 * 60 * 60)
+    }
+    
+    // Alerta pentru schimbul de ulei: peste 6 luni (180 zile)
+    private var isOilChangeOverdue: Bool {
+        guard let car = viewModel.car,
+              let oilChangeDate = dateFormatter.date(from: car.lastOilChange) else { return false }
+        return Date().timeIntervalSince(oilChangeDate) > (180 * 24 * 60 * 60)
+    }
+    
+    // Alerta pentru schimbul de anvelope: peste 1 an de la ultima schimbare
+    private var isTireChangeOverdue: Bool {
+        guard let car = viewModel.car,
+              let tireChangeDate = dateFormatter.date(from: car.lastTireChange) else { return false }
+        return Date().timeIntervalSince(tireChangeDate) > (365 * 24 * 60 * 60)
+    }
+    
+    // Alerta pentru asigurare: dacă data de expirare a asigurării este în trecut
+    private var isInsuranceExpired: Bool {
+        guard let car = viewModel.car,
+              let insuranceDate = dateFormatter.date(from: car.insuranceExpiration) else { return false }
+        return Date() > insuranceDate
+    }
+    
+    // Orice alertă activă
+    private var isAnyAlertActive: Bool {
+        isInspectionOverdue || isOilChangeOverdue || isTireChangeOverdue || isInsuranceExpired
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -29,6 +69,23 @@ struct MyCarView: View {
                             .font(.title)
                             .fontWeight(.bold)
                         
+                        // Alerte custom pentru fiecare câmp
+                        VStack(spacing: 8) {
+                            if isInspectionOverdue {
+                                AlertBanner(message: "Inspection overdue! Please update your inspection record.")
+                            }
+                            if isOilChangeOverdue {
+                                AlertBanner(message: "Oil change overdue! Please update your oil change record.")
+                            }
+                            if isTireChangeOverdue {
+                                AlertBanner(message: "Tire change overdue! Please update your tire change record.")
+                            }
+                            if isInsuranceExpired {
+                                AlertBanner(message: "Insurance expired! Please update your insurance details.")
+                            }
+                        }
+                        .padding(.horizontal)
+                        
                         MyCarInfoCard(title: "Last Location", value: trackingVM.lastLocationName ?? "Fetching...")
                         
                         HStack(spacing: 16) {
@@ -36,14 +93,92 @@ struct MyCarView: View {
                             MyCarInfoCard(title: "Mileage", value: "\(car.mileage) km")
                         }
                         
+                        // Informații despre întreținere
                         HStack(spacing: 16) {
-                            MyCarInfoCard(title: "VIN", value: car.vin)
                             MyCarInfoCard(title: "Inspection", value: viewModel.formattedDate(car.lastInspection))
+                            MyCarInfoCard(title: "Oil Change", value: viewModel.formattedDate(car.lastOilChange))
                         }
                         
                         HStack(spacing: 16) {
+                            MyCarInfoCard(title: "Tire Change", value: viewModel.formattedDate(car.lastTireChange))
                             MyCarInfoCard(title: "Insurance Valid", value: viewModel.formattedDate(car.insuranceExpiration))
                         }
+                        
+                        // Secțiune pentru acțiuni de întreținere
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Maintenance Actions")
+                                .font(.headline)
+                            
+                            Button(action: {
+                                guard let car = viewModel.car else { return }
+                                CarMaintenanceService.shared.markMaintenance(carId: Int(car.id)) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success():
+                                            print("Inspection marked as done successfully.")
+                                            viewModel.fetchCar()
+                                        case .failure(let error):
+                                            print("Error marking inspection: \(error.localizedDescription)")
+                                        }
+                                    }
+                                }
+                            }) {
+                                Text("Mark Inspection Done")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
+                            
+                            Button(action: {
+                                guard let car = viewModel.car else { return }
+                                CarMaintenanceService.shared.markTireChange(carId: Int(car.id)) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success():
+                                            print("Tire change renewed successfully.")
+                                            viewModel.fetchCar()
+                                        case .failure(let error):
+                                            print("Error renewing tires: \(error.localizedDescription)")
+                                        }
+                                    }
+                                }
+                            }) {
+                                Text("Renew Tires")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
+                            
+                            Button(action: {
+                                guard let car = viewModel.car else { return }
+                                CarMaintenanceService.shared.markInsurance(carId: Int(car.id)) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success():
+                                            print("Insurance reviewed successfully.")
+                                            viewModel.fetchCar()
+                                        case .failure(let error):
+                                            print("Error reviewing insurance: \(error.localizedDescription)")
+                                        }
+                                    }
+                                }
+                            }) {
+                                Text("Review Insurance")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
+                        }
+                        .padding(.horizontal)
                         
                         if dailyActivitiesVM.isLoading {
                             ProgressView("Loading fuel consumption data...")
@@ -61,6 +196,7 @@ struct MyCarView: View {
                             .frame(height: 300)
                             .cornerRadius(12)
                         
+                        // Butoanele pentru duty: "Start Duty" este dezactivat dacă există alerte
                         if trackingVM.isDutyActive {
                             Button("Stop Duty") {
                                 trackingVM.stopDuty()
@@ -76,6 +212,7 @@ struct MyCarView: View {
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.green)
+                            .disabled(isAnyAlertActive)
                         }
                         
                         NavigationLink(destination: DailyActivitiesView()) {
@@ -88,19 +225,6 @@ struct MyCarView: View {
                                 .cornerRadius(8)
                         }
                         .padding(.horizontal)
-                        
-                        if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
-                            NavigationLink(destination: AllCarsView()) {
-                                Text("View All Cars")
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.purple)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                            }
-                            .padding(.horizontal)
-                        }
                     } else {
                         if viewModel.isLoading {
                             ProgressView("Loading Car...")
@@ -143,6 +267,25 @@ struct MyCarView: View {
                 }
             }
         }
+    }
+}
+
+struct AlertBanner: View {
+    let message: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.white)
+            Text(message)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color.red)
+        .cornerRadius(8)
     }
 }
 

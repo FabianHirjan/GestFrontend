@@ -1,8 +1,3 @@
-//
-//  CreateDailyActivityView.swift
-//  GestFront
-//
-
 import SwiftUI
 
 struct CreateDailyActivityView: View {
@@ -14,9 +9,17 @@ struct CreateDailyActivityView: View {
             Form {
                 Section(header: Text("Activity Details")) {
                     TextField("Description", text: $viewModel.description)
+                    
                     Text("Kilometers: \(String(format: "%.2f", viewModel.kilometers)) km")
                         .foregroundColor(.gray)
+                    
                     DatePicker("Date", selection: $viewModel.date, displayedComponents: .date)
+                    
+                    // Câmp pentru consumul de combustibil
+                    TextField("Fuel Consumption (L/100km)",
+                              value: $viewModel.fuelConsumption,
+                              formatter: NumberFormatter.decimalWithOneFractionDigit)
+                        .keyboardType(.decimalPad)
                 }
                 
                 if viewModel.isSubmitting {
@@ -31,20 +34,31 @@ struct CreateDailyActivityView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         viewModel.submitActivity()
-                        if viewModel.submissionSuccess {
-                            dismiss()
-                        }
                     }
                     .disabled(viewModel.isSubmitting)
                 }
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
+            .onChange(of: viewModel.submissionSuccess) { success in
+                if success {
+                    dismiss()
                 }
             }
         }
     }
 }
 
-#Preview {
-    CreateDailyActivityView(viewModel: CreateDailyActivityViewModel(description: "Test Duty", kilometers: 10.5, date: Date()))
+// Formatter simplu pentru un număr cu max 1 zecimală
+extension NumberFormatter {
+    static var decimalWithOneFractionDigit: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 1
+        formatter.minimumFractionDigits = 0
+        return formatter
+    }
 }

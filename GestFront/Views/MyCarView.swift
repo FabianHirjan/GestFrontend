@@ -1,8 +1,3 @@
-//
-//  MyCarView.swift
-//  GestFront
-//
-
 import SwiftUI
 import GoogleMaps
 
@@ -13,42 +8,36 @@ struct MyCarView: View {
     @State private var path = GMSMutablePath()
     @State private var shouldPresentSheet = false
     
-    // Formatter pentru conversia stringurilor în Date
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
         return formatter
     }
     
-    // Alerta pentru inspectie: peste 1 an de la ultima inspecție
     private var isInspectionOverdue: Bool {
         guard let car = viewModel.car,
               let inspectionDate = dateFormatter.date(from: car.lastInspection) else { return false }
         return Date().timeIntervalSince(inspectionDate) > (365 * 24 * 60 * 60)
     }
     
-    // Alerta pentru schimbul de ulei: peste 6 luni (180 zile)
     private var isOilChangeOverdue: Bool {
         guard let car = viewModel.car,
               let oilChangeDate = dateFormatter.date(from: car.lastOilChange) else { return false }
         return Date().timeIntervalSince(oilChangeDate) > (180 * 24 * 60 * 60)
     }
     
-    // Alerta pentru schimbul de anvelope: peste 1 an de la ultima schimbare
     private var isTireChangeOverdue: Bool {
         guard let car = viewModel.car,
               let tireChangeDate = dateFormatter.date(from: car.lastTireChange) else { return false }
         return Date().timeIntervalSince(tireChangeDate) > (365 * 24 * 60 * 60)
     }
     
-    // Alerta pentru asigurare: dacă data de expirare a asigurării este în trecut
     private var isInsuranceExpired: Bool {
         guard let car = viewModel.car,
               let insuranceDate = dateFormatter.date(from: car.insuranceExpiration) else { return false }
         return Date() > insuranceDate
     }
     
-    // Orice alertă activă
     private var isAnyAlertActive: Bool {
         isInspectionOverdue || isOilChangeOverdue || isTireChangeOverdue || isInsuranceExpired
     }
@@ -69,7 +58,6 @@ struct MyCarView: View {
                             .font(.title)
                             .fontWeight(.bold)
                         
-                        // Alerte custom pentru fiecare câmp
                         VStack(spacing: 8) {
                             if isInspectionOverdue {
                                 AlertBanner(message: "Inspection overdue! Please update your inspection record.")
@@ -93,7 +81,6 @@ struct MyCarView: View {
                             MyCarInfoCard(title: "Mileage", value: "\(car.mileage) km")
                         }
                         
-                        // Informații despre întreținere
                         HStack(spacing: 16) {
                             MyCarInfoCard(title: "Inspection", value: viewModel.formattedDate(car.lastInspection))
                             MyCarInfoCard(title: "Oil Change", value: viewModel.formattedDate(car.lastOilChange))
@@ -104,7 +91,7 @@ struct MyCarView: View {
                             MyCarInfoCard(title: "Insurance Valid", value: viewModel.formattedDate(car.insuranceExpiration))
                         }
                         
-                        // Secțiune pentru acțiuni de întreținere
+                        // Butoane de Maintenance
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Maintenance Actions")
                                 .font(.headline)
@@ -180,6 +167,7 @@ struct MyCarView: View {
                         }
                         .padding(.horizontal)
                         
+                        // Consum de combustibil (grafic)
                         if dailyActivitiesVM.isLoading {
                             ProgressView("Loading fuel consumption data...")
                                 .padding()
@@ -192,11 +180,12 @@ struct MyCarView: View {
                                 .padding()
                         }
                         
+                        // Harta Google
                         GoogleMapsView(currentLocation: $trackingVM.currentLocation, path: $path)
                             .frame(height: 300)
                             .cornerRadius(12)
                         
-                        // Butoanele pentru duty: "Start Duty" este dezactivat dacă există alerte
+                        // Butoane de Duty
                         if trackingVM.isDutyActive {
                             Button("Stop Duty") {
                                 trackingVM.stopDuty()
@@ -246,6 +235,7 @@ struct MyCarView: View {
                 dailyActivitiesVM.fetchActivities()
                 trackingVM.fetchLastLocation()
             }
+            // Când se termină duty, apar datele în trackingVM.calculatedDutyDetails
             .onChange(of: trackingVM.didEndDuty) { newValue in
                 if newValue {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -253,15 +243,20 @@ struct MyCarView: View {
                     }
                 }
             }
+            // Sheet pentru creare Daily Activity
             .sheet(isPresented: $shouldPresentSheet, onDismiss: {
                 trackingVM.didEndDuty = false
             }) {
                 if let details = trackingVM.calculatedDutyDetails {
-                    CreateDailyActivityView(viewModel: CreateDailyActivityViewModel(
-                        description: details.description,
-                        kilometers: details.kilometers,
-                        date: details.date
-                    ))
+                    // Preluăm descriere + kilometri deja calculați
+                    CreateDailyActivityView(
+                        viewModel: CreateDailyActivityViewModel(
+                            description: details.description,
+                            kilometers: details.kilometers,
+                            date: details.date,
+                            fuelConsumption: 0.0 // setăm 0.0 sau orice logică dorești
+                        )
+                    )
                 } else {
                     ProgressView("Loading details...")
                 }
@@ -307,8 +302,4 @@ struct MyCarInfoCard: View {
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
-}
-
-#Preview {
-    MyCarView()
 }

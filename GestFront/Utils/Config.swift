@@ -10,6 +10,6 @@
 import Foundation
 
 struct Config {
-    static let baseURL = "https://gest-app-bachelors-production-7d2e.up.railway.app/api"
-    static let wsURL = "wss://gest-app-bachelors-production-7d2e.up.railway.app/ws"
+    static let baseURL = "http://localhost:8080/api"
+    static let wsURL = "http://localhost:8080/ws"
 }

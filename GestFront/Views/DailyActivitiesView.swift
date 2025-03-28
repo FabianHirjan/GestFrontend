@@ -1,12 +1,10 @@
-//
-//  DailyActivitiesView.swift
-//  GestFront
-//
-
 import SwiftUI
 
 struct DailyActivitiesView: View {
     @StateObject private var viewModel = DailyActivitiesViewModel()
+    
+    // Stată în care controlăm afișarea sheet-ului
+    @State private var showCreateView = false
     
     var body: some View {
         NavigationView {
@@ -32,6 +30,27 @@ struct DailyActivitiesView: View {
                 }
             }
             .navigationTitle("Daily Activities")
+            .toolbar {
+                // Butonul "+" din dreapta sus
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        showCreateView = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            // Când userul apasă butonul +, se afișează un sheet cu formularul de creare
+            .sheet(isPresented: $showCreateView) {
+                CreateDailyActivityView(
+                    viewModel: CreateDailyActivityViewModel(
+                        description: "",
+                        kilometers: 0.0,
+                        date: Date(),
+                        fuelConsumption: 0.0
+                    )
+                )
+            }
             .onAppear {
                 viewModel.fetchActivities()
             }

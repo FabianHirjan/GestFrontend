@@ -124,8 +124,4 @@ struct DutyDetails {
     let description: String
     let kilometers: Double
     let date: Date
-    
-    // Dacă vrei să stochezi și altele, adaugă aici:
-    // let averageSpeed: Double
-    // let fuelConsumption: Double
 }

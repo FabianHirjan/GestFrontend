@@ -22,12 +22,25 @@ struct MenuView: View {
                     }
                     
                     if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
+                        // Există deja buton pentru AllCarsView
                         NavigationLink(destination: AllCarsView()) {
                             Text("View All Cars")
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.purple)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                        
+                        // Adăugăm butonul pentru Real-Time Tracking
+                        NavigationLink(destination: AdminTrackingView()) {
+                            Text("Real-Time Tracking")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.green)
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }

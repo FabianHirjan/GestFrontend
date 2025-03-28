@@ -21,5 +21,12 @@
     <!-- Permisiuni pentru notificări (dacă folosești notificări) -->
     <key>NSUserNotificationUsageDescription</key>
     <string>This app sends notifications about your car status.</string>
+    
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
 </dict>
 </plist>

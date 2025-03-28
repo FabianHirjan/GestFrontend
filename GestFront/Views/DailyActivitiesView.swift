@@ -46,8 +46,7 @@ struct DailyActivitiesView: View {
                     viewModel: CreateDailyActivityViewModel(
                         description: "",
                         kilometers: 0.0,
-                        date: Date(),
-                        fuelConsumption: 0.0
+                        date: Date()
                     )
                 )
             }

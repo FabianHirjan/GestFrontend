@@ -5,12 +5,14 @@
 //  Created by Fabian Andrei Hirjan on 27.03.2025.
 //
 
-struct UserDTO: Codable {
-    let id: Int64
+import Foundation
+
+struct UserDTO: Codable, Identifiable, Hashable {
+    let id: Int
     let username: String
-    let password: String?
-    let role: String?
     let email: String?
+    let role: String?
     let firstName: String?
     let lastName: String?
 }
+

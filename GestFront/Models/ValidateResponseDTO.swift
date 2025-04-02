@@ -12,8 +12,8 @@ struct LoginResponse: Decodable {
     let role: String
 }
 
-struct ValidateResponse: Decodable {
-    let userId: Int 
+struct ValidateResponse: Codable {
     let username: String
     let role: String
+    let userId: Int  // sau String, depinde cum e pe server
 }

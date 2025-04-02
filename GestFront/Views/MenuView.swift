@@ -1,4 +1,3 @@
-// Views/MenuView.swift
 import SwiftUI
 
 struct MenuView: View {
@@ -22,7 +21,6 @@ struct MenuView: View {
                     }
                     
                     if UserDefaults.standard.string(forKey: "user_role") == "Admin" {
-                        // Există deja buton pentru AllCarsView
                         NavigationLink(destination: AllCarsView()) {
                             Text("View All Cars")
                                 .fontWeight(.semibold)
@@ -34,7 +32,6 @@ struct MenuView: View {
                         }
                         .padding(.horizontal)
                         
-                        // Adăugăm butonul pentru Real-Time Tracking
                         NavigationLink(destination: AdminTrackingView()) {
                             Text("Real-Time Tracking")
                                 .fontWeight(.semibold)
@@ -47,6 +44,26 @@ struct MenuView: View {
                         .padding(.horizontal)
                     }
                     
+                    // --- NOUL BUTON DE MESSENGER ---
+                    let userId = UserDefaults.standard.integer(forKey: "user_id")
+                    if userId != 0 {
+                        NavigationLink(destination: {
+                            // Când intri în Messenger, creezi un ChatWebSocketManager
+                            // cu userId-ul curent, iar ecranul de start va fi SearchUserView:
+                            SearchUserView(currentUserId: userId)
+                        }) {
+                            Text("Messenger")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    // --- Butonul de Logout ---
                     Button("Logout") {
                         view_model.logout()
                     }

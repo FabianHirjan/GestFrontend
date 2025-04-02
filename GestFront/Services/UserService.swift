@@ -1,4 +1,8 @@
-// Services/UserService.swift
+//
+//  UserService.swift
+//  YourAppName
+//
+
 import Foundation
 
 class UserService {
@@ -26,5 +30,27 @@ class UserService {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func searchUsers(username: String, completion: @escaping (Result<[UserDTO], Error>) -> Void) {
+        guard let token = UserDefaults.standard.string(forKey: "jwt_token"),
+              let url = URL(string: "\(Config.baseURL)/users/search?username=\(username)") else {
+            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token or invalid URL"])))
+            return
+        }
+        
+        let request = networkManager.createRequest(url: url, method: "GET", token: token)
+        networkManager.performRequest(request, completion: completion)
+    }
+    
+    func fetchRecentChats(userId: Int, completion: @escaping (Result<[UserDTO], Error>) -> Void) {
+        guard let token = UserDefaults.standard.string(forKey: "jwt_token"),
+              let url = URL(string: "\(Config.baseURL)/messages/conversations?userId=\(userId)") else {
+            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token or invalid URL"])))
+            return
+        }
+        
+        let request = networkManager.createRequest(url: url, method: "GET", token: token)
+        networkManager.performRequest(request, completion: completion)
     }
 }

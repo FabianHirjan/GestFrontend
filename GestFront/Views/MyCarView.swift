@@ -185,8 +185,10 @@ struct MyCarView: View {
                             .frame(height: 300)
                             .cornerRadius(12)
                         
-                        // Butoane de Duty
+                        // Duty Buttons and Speedometer
                         if trackingVM.isDutyActive {
+                            SpeedometerView(trackingVM: trackingVM)
+                            
                             Button("Stop Duty") {
                                 trackingVM.stopDuty()
                             }
@@ -235,7 +237,6 @@ struct MyCarView: View {
                 dailyActivitiesVM.fetchActivities()
                 trackingVM.fetchLastLocation()
             }
-            // Când se termină duty, apar datele în trackingVM.calculatedDutyDetails
             .onChange(of: trackingVM.didEndDuty) { newValue in
                 if newValue {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -243,18 +244,16 @@ struct MyCarView: View {
                     }
                 }
             }
-            // Sheet pentru creare Daily Activity
             .sheet(isPresented: $shouldPresentSheet, onDismiss: {
                 trackingVM.didEndDuty = false
             }) {
                 if let details = trackingVM.calculatedDutyDetails {
-                    // Preluăm descriere + kilometri deja calculați
                     CreateDailyActivityView(
                         viewModel: CreateDailyActivityViewModel(
                             description: details.description,
                             kilometers: details.kilometers,
                             date: details.date,
-                            fuelConsumption: 0.0 // setăm 0.0 sau orice logică dorești
+                            fuelConsumption: 0.0
                         )
                     )
                 } else {
@@ -262,44 +261,5 @@ struct MyCarView: View {
                 }
             }
         }
-    }
-}
-
-struct AlertBanner: View {
-    let message: String
-    
-    var body: some View {
-        HStack {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.white)
-            Text(message)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.red)
-        .cornerRadius(8)
-    }
-}
-
-struct MyCarInfoCard: View {
-    let title: String
-    let value: String
-    
-    var body: some View {
-        VStack {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.gray)
-            Text(value)
-                .font(.body)
-                .fontWeight(.medium)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(8)
     }
 }

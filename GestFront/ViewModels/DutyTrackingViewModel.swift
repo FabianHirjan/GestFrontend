@@ -1,7 +1,9 @@
 import Foundation
 import CoreLocation
+import SwiftUI
 import GoogleMaps
 
+// DutyTrackingViewModel
 class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     static let shared = DutyTrackingViewModel()
     
@@ -9,6 +11,8 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var currentLocation: CLLocation?
     @Published var lastLocationName: String?
     @Published var averageSpeed: Double = 0.0
+    @Published var currentSpeed: Double = 0.0 // Real-time speed in km/h
+    @Published var dutyStartTime: Date? // Time when duty started
     @Published var didEndDuty: Bool = false
     @Published var calculatedDutyDetails: DutyDetails?
     
@@ -21,7 +25,7 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         self.userId = UserDefaults.standard.string(forKey: "user_id") ?? "unknown_user"
         super.init()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.requestWhenInUseAuthorization()
     }
     
@@ -29,8 +33,10 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         guard !isDutyActive else { return }
         locationManager.startUpdatingLocation()
         isDutyActive = true
+        dutyStartTime = Date()
         locations.removeAll()
         averageSpeed = 0.0
+        currentSpeed = 0.0
         didEndDuty = false
         calculatedDutyDetails = nil
         print("Duty started for user: \(userId)")
@@ -40,18 +46,15 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         guard isDutyActive else { return }
         locationManager.stopUpdatingLocation()
         isDutyActive = false
+        dutyStartTime = nil
         
-        // Construim doar local datele pentru Daily Activity,
-        // fără să trimitem direct la server (ca să evităm dublarea).
+        // Construim doar local datele pentru Daily Activity
         let routeDescription = "Duty from \(lastLocationName ?? "Unknown")"
         
         self.calculatedDutyDetails = DutyDetails(
             description: routeDescription,
             kilometers: self.calculateTotalKilometers(),
             date: Date()
-            // Dacă vrei să stochezi și averageSpeed/fuelConsumption, le poți pune aici:
-            // averageSpeed: self.averageSpeed,
-            // fuelConsumption: <calculează ceva sau 0.0>
         )
         
         // Semnalăm ecranului MyCarView să deschidă sheet-ul de Daily Activity
@@ -79,11 +82,12 @@ class DutyTrackingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.currentLocation = loc
+            self.currentSpeed = max(loc.speed * 3.6, 0) // Convert m/s to km/h, ensure non-negative
             if self.isDutyActive {
                 self.locations.append(loc)
                 self.averageSpeed = self.calculateAverageSpeed()
                 
-                // Trimitem live location la backend la fiecare 5 secunde (exemplu)
+                // Trimitem live location la backend la fiecare 5 secunde
                 if self.lastLiveUpdate == nil || Date().timeIntervalSince(self.lastLiveUpdate!) >= 5 {
                     DutyTrackingService.shared.sendLiveLocation(
                         location: loc,

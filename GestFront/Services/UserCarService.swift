@@ -13,7 +13,7 @@ class UserCarService {
     
     func fetchUserCar(completion: @escaping (Result<CarDTO, Error>) -> Void) {
         guard let token = UserDefaults.standard.string(forKey: "jwt_token"),
-              let url = URL(string: "\(Config.baseURL)/user/car") else {
+              let url = URL(string: "\(Config.baseURL)/users/car") else {
             completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token or invalid URL"])))
             return
         }

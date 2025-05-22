@@ -10,6 +10,6 @@
 import Foundation
 
 struct Config {
-    static let baseURL = "http://192.168.1.243:8080/api"
-    static let wsURL = "ws://192.168.1.243:8080/ws"
+    static let baseURL = "http://localhost:8080/api"
+    static let wsURL = "ws://localhost:8080/ws"
 }

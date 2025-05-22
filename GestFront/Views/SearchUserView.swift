@@ -8,54 +8,87 @@ struct SearchUserView: View {
     // Id-ul user-ului logat
     let currentUserId: Int
     
+    // Static Grok user
+    private let grokUser = UserDTO(
+        id: -1,
+        username: "Grok Assistant",
+        email: nil,
+        role: nil,
+        firstName: nil,
+        lastName: nil
+    )
+    
     var body: some View {
-        VStack {
-            // Câmp de căutare
-            HStack {
-                TextField("Caută utilizator...", text: $searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button("Caută") {
-                    searchUsers()
+        NavigationStack {
+            VStack {
+                // Câmp de căutare
+                HStack {
+                    TextField("Caută utilizator...", text: $searchText)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Button("Caută") {
+                        searchUsers()
+                    }
                 }
-            }
-            .padding()
-            
-            // Lista cu conversații recente
-            Text("Conversații recente")
-                .font(.headline)
-                .padding(.top)
-            
-            List(recentChats) { user in
+                .padding()
+                
+                // Secțiune pentru Grok Assistant
+                Text("Asistent")
+                    .font(.headline)
+                    .padding(.top)
+                
                 NavigationLink(destination: {
-                    ChatView(
-                        chatManager: ChatWebSocketManager(currentUserId: currentUserId),
-                        otherUser: user
-                    )
+                    GrokChatView()
                 }) {
-                    Text(user.username)
+                    HStack {
+                        Image(systemName: "sparkles") // Icon to distinguish Grok
+                            .foregroundColor(.blue)
+                        Text(grokUser.username)
+                            .foregroundColor(.blue)
+                        Spacer()
+                    }
+                    .padding(.vertical, 4)
+                }
+                .padding(.horizontal)
+                
+                Divider()
+                
+                // Lista cu conversații recente
+                Text("Conversații recente")
+                    .font(.headline)
+                    .padding(.top)
+                
+                List(recentChats) { user in
+                    NavigationLink(destination: {
+                        ChatView(
+                            chatManager: ChatWebSocketManager(currentUserId: currentUserId),
+                            otherUser: user
+                        )
+                    }) {
+                        Text(user.username)
+                    }
+                }
+                
+                Divider()
+                
+                // Rezultatele căutării
+                Text("Rezultate căutare")
+                    .font(.headline)
+                
+                List(searchResults) { user in
+                    NavigationLink(destination: {
+                        ChatView(
+                            chatManager: ChatWebSocketManager(currentUserId: currentUserId),
+                            otherUser: user
+                        )
+                    }) {
+                        Text(user.username)
+                    }
                 }
             }
-            
-            Divider()
-            
-            // Rezultatele căutării
-            Text("Rezultate căutare")
-                .font(.headline)
-            
-            List(searchResults) { user in
-                NavigationLink(destination: {
-                    ChatView(
-                        chatManager: ChatWebSocketManager(currentUserId: currentUserId),
-                        otherUser: user
-                    )
-                }) {
-                    Text(user.username)
-                }
+            .navigationTitle("Mesaje")
+            .onAppear {
+                fetchRecentChats()
             }
-        }
-        .navigationTitle("Mesaje")
-        .onAppear {
-            fetchRecentChats()
         }
     }
     
@@ -64,7 +97,8 @@ struct SearchUserView: View {
             switch result {
             case .success(let users):
                 DispatchQueue.main.async {
-                    self.searchResults = users
+                    // Exclude Grok from search results
+                    self.searchResults = users.filter { $0.id != grokUser.id }
                 }
             case .failure(let error):
                 print("Eroare la căutarea utilizatorilor: \(error)")
@@ -76,7 +110,7 @@ struct SearchUserView: View {
         UserService.shared.fetchRecentChats(userId: currentUserId) { result in
             switch result {
             case .success(let users):
-                let uniqueUsers = Array(Set(users))
+                let uniqueUsers = Array(Set(users)).filter { $0.id != grokUser.id }
                 DispatchQueue.main.async {
                     self.recentChats = uniqueUsers
                 }

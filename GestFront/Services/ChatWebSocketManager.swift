@@ -87,7 +87,7 @@ class ChatWebSocketManager: ObservableObject {
     // Actualizarea metodei fetchConversation:
     // Se decodează [HistoryMessageResponse] și se mapează în [ChatMessage]
     func fetchConversation(with otherUserId: Int) {
-        guard let url = URL(string: "http://192.168.1.243:8080/api/messages/history?user1=\(currentUserId)&user2=\(otherUserId)") else {
+        guard let url = URL(string: "http:/localhost:8080/api/messages/history?user1=\(currentUserId)&user2=\(otherUserId)") else {
             return
         }
         URLSession.shared.dataTask(with: url) { data, response, error in

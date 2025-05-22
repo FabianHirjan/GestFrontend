@@ -1,8 +1,3 @@
-//
-//  AllCarsView.swift
-//  GestFront
-//
-
 import SwiftUI
 
 struct AllCarsView: View {
@@ -19,27 +14,29 @@ struct AllCarsView: View {
                     Text(error)
                         .foregroundColor(.red)
                 } else {
-                    List(viewModel.cars) { car in
-                        HStack {
-                            Text("🚗")
-                                .font(.title)
-                            VStack(alignment: .leading) {
-                                Text("\(car.carMake.make) \(car.carModel.model)")
-                                    .font(.headline)
-                                Text("Plate: \(car.licensePlate)")
-                                    .font(.subheadline)
-                                Text("Driver: \(car.driver?.username ?? "Unassigned")")
-                                    .font(.subheadline)
-                                    .foregroundColor(car.driver == nil ? .gray : .black)
-                            }
-                            Spacer()
-                            if car.driver == nil {
-                                Button("Assign") {
-                                    selectedCarId = car.id
-                                    showingAssignSheet = true
+                    List {
+                        ForEach(viewModel.cars, id: \.id) { car in
+                            HStack {
+                                Text("🚗")
+                                    .font(.title)
+                                VStack(alignment: .leading) {
+                                    Text("\(car.carMake.make) \(car.carModel.model)")
+                                        .font(.headline)
+                                    Text("Plate: \(car.licensePlate)")
+                                        .font(.subheadline)
+                                    Text("Driver: \(car.driver?.username ?? "Unassigned")")
+                                        .font(.subheadline)
+                                        .foregroundColor(car.driver == nil ? .gray : .black)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.blue)
+                                Spacer()
+                                if car.driver == nil {
+                                    Button("Assign") {
+                                        selectedCarId = car.id
+                                        showingAssignSheet = true
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.blue)
+                                }
                             }
                         }
                     }

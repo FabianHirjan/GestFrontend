@@ -7,6 +7,7 @@ struct MyCarView: View {
     @StateObject private var trackingVM = DutyTrackingViewModel.shared
     @State private var path = GMSMutablePath()
     @State private var shouldPresentSheet = false
+    @State private var showVirtualCockpit = false
     
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -185,21 +186,14 @@ struct MyCarView: View {
                             .frame(height: 300)
                             .cornerRadius(12)
                         
-                        // Duty Buttons and Speedometer
+                        // Duty Buttons
                         if trackingVM.isDutyActive {
-                            SpeedometerView(trackingVM: trackingVM)
-                            
-                            Button("Stop Duty") {
-                                trackingVM.stopDuty()
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.red)
-                            
                             Text("Avg Speed: \(String(format: "%.1f", trackingVM.averageSpeed)) km/h")
                                 .padding()
                         } else {
                             Button("Start Duty") {
                                 trackingVM.startDuty()
+                                showVirtualCockpit = true
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.green)
@@ -230,7 +224,7 @@ struct MyCarView: View {
                     Spacer()
                 }
                 .padding()
-            }
+            }   
             .navigationTitle("My Car")
             .onAppear {
                 viewModel.fetchCar()
@@ -259,6 +253,13 @@ struct MyCarView: View {
                 } else {
                     ProgressView("Loading details...")
                 }
+            }
+            .fullScreenCover(isPresented: $showVirtualCockpit, onDismiss: {
+                if trackingVM.isDutyActive {
+                    trackingVM.stopDuty()
+                }
+            }) {
+                VirtualCockpitView(trackingVM: trackingVM, path: $path)
             }
         }
     }

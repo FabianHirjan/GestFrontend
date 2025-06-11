@@ -4,7 +4,6 @@
 //
 
 import Foundation
-
 // MyCarViewModel
 class MyCarViewModel: ObservableObject {
     @Published var car: CarDTO?
